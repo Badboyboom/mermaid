@@ -95,17 +95,18 @@ xychart-beta
 
 ## Chart Configurations
 
-| Parameter                | Description                                    | Default value |
-| ------------------------ | ---------------------------------------------- | :-----------: |
-| width                    | Width of the chart                             |      700      |
-| height                   | Height of the chart                            |      500      |
-| titlePadding             | Top and Bottom padding of the title            |      10       |
-| titleFontSize            | Title font size                                |      20       |
-| showTitle                | Title to be shown or not                       |     true      |
-| xAxis                    | xAxis configuration                            |  AxisConfig   |
-| yAxis                    | yAxis configuration                            |  AxisConfig   |
-| chartOrientation         | 'vertical' or 'horizontal'                     |  'vertical'   |
-| plotReservedSpacePercent | Minimum space plots will take inside the chart |      50       |
+| Parameter                | Description                                                   | Default value |
+| ------------------------ | ------------------------------------------------------------- | :-----------: |
+| width                    | Width of the chart                                            |      700      |
+| height                   | Height of the chart                                           |      500      |
+| titlePadding             | Top and Bottom padding of the title                           |      10       |
+| titleFontSize            | Title font size                                               |      20       |
+| showTitle                | Title to be shown or not                                      |     true      |
+| xAxis                    | xAxis configuration                                           |  AxisConfig   |
+| yAxis                    | yAxis configuration                                           |  AxisConfig   |
+| chartOrientation         | 'vertical' or 'horizontal'                                    |  'vertical'   |
+| plotReservedSpacePercent | Minimum space plots will take inside the chart                |      50       |
+| showDataLabel            | Should show the value corresponding to the bar within the bar |     false     |
 
 ### AxisConfig
 
@@ -125,20 +126,26 @@ xychart-beta
 
 ## Chart Theme Variables
 
-```note
-Themes for xychart resides inside xychart attribute so to set the variables use this syntax
-%%{init: { "themeVariables": {"xyChart": {"titleColor": "#ff0000"} } }}%%
+Themes for xychart resides inside xychart attribute so to set the variables use this syntax:
+
+```yaml
+---
+config:
+  themeVariables:
+    xyChart:
+      titleColor: '#ff0000'
+---
 ```
 
 | Parameter        | Description                                               |
 | ---------------- | --------------------------------------------------------- |
 | backgroundColor  | Background color of the whole chart                       |
 | titleColor       | Color of the Title text                                   |
-| xAxisLableColor  | Color of the x-axis labels                                |
+| xAxisLabelColor  | Color of the x-axis labels                                |
 | xAxisTitleColor  | Color of the x-axis title                                 |
 | xAxisTickColor   | Color of the x-axis tick                                  |
 | xAxisLineColor   | Color of the x-axis line                                  |
-| yAxisLableColor  | Color of the y-axis labels                                |
+| yAxisLabelColor  | Color of the y-axis labels                                |
 | yAxisTitleColor  | Color of the y-axis title                                 |
 | yAxisTickColor   | Color of the y-axis tick                                  |
 | yAxisLineColor   | Color of the y-axis line                                  |
@@ -152,6 +159,7 @@ config:
     xyChart:
         width: 900
         height: 600
+        showDataLabel: true
     themeVariables:
         xyChart:
             titleColor: "#ff0000"

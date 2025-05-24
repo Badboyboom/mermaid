@@ -1,4 +1,5 @@
 {
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:base",
     ":rebaseStalePrs",
@@ -15,21 +16,33 @@
       "automerge": true
     },
     {
-      "groupName": "all patch dependencies",
-      "groupSlug": "all-patch",
+      "groupName": "all major dependencies",
+      "groupSlug": "all-major",
       "matchPackagePatterns": ["*"],
-      "matchUpdateTypes": ["patch"]
+      "matchUpdateTypes": ["major"]
     },
     {
       "groupName": "all minor dependencies",
       "groupSlug": "all-minor",
       "matchPackagePatterns": ["*"],
       "matchUpdateTypes": ["minor"]
+    },
+    {
+      "groupName": "all patch dependencies",
+      "groupSlug": "all-patch",
+      "matchPackagePatterns": ["*"],
+      "matchUpdateTypes": ["patch"]
+    },
+    {
+      "groupName": "eslint",
+      "matchPackagePatterns": ["eslint"]
+    },
+    {
+      "groupName": "dompurify",
+      "matchPackagePatterns": ["dompurify"]
     }
   ],
-  "dependencyDashboard": true,
-  "major": {
-    "dependencyDashboardApproval": true
-  },
-  "dependencyDashboardAutoclose": true
+  "dependencyDashboard": false,
+  "dependencyDashboardAutoclose": true,
+  "rangeStrategy": "bump"
 }

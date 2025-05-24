@@ -178,7 +178,7 @@ export const draw = function (text, id, version, diagObj) {
   // tasks are created based on their order of startTime
   taskArray.sort(taskCompare);
 
-  makeGant(taskArray, w, h);
+  makeGantt(taskArray, w, h);
 
   configureSvgSize(svg, h, w, conf.useMaxWidth);
 
@@ -194,7 +194,7 @@ export const draw = function (text, id, version, diagObj) {
    * @param pageWidth
    * @param pageHeight
    */
-  function makeGant(tasks, pageWidth, pageHeight) {
+  function makeGantt(tasks, pageWidth, pageHeight) {
     const barHeight = conf.barHeight;
     const gap = barHeight + conf.barGap;
     const topPadding = conf.topPadding;
@@ -231,10 +231,11 @@ export const draw = function (text, id, version, diagObj) {
    * @param w
    */
   function drawRects(theArray, theGap, theTopPad, theSidePad, theBarHeight, theColorScale, w) {
+    // Sort theArray so that tasks with `vert` come last
+    theArray.sort((a, b) => (a.vert === b.vert ? 0 : a.vert ? 1 : -1));
     // Get unique task orders. Required to draw the background rects when display mode is compact.
     const uniqueTaskOrderIds = [...new Set(theArray.map((item) => item.order))];
     const uniqueTasks = uniqueTaskOrderIds.map((id) => theArray.find((item) => item.order === id));
-
     // Draw background rects covering the entire width of the graph, these form the section rows.
     svg
       .append('g')
@@ -259,7 +260,8 @@ export const draw = function (text, id, version, diagObj) {
           }
         }
         return 'section section0';
-      });
+      })
+      .enter();
 
     // Draw the rects representing the tasks
     const rectangles = svg.append('g').selectAll('rect').data(theArray).enter();
@@ -289,15 +291,26 @@ export const draw = function (text, id, version, diagObj) {
       .attr('y', function (d, i) {
         // Ignore the incoming i value and use our order instead
         i = d.order;
+        if (d.vert) {
+          return conf.gridLineStartPadding;
+        }
         return i * theGap + theTopPad;
       })
       .attr('width', function (d) {
         if (d.milestone) {
           return theBarHeight;
         }
+        if (d.vert) {
+          return 0.08 * theBarHeight;
+        }
         return timeScale(d.renderEndTime || d.endTime) - timeScale(d.startTime);
       })
-      .attr('height', theBarHeight)
+      .attr('height', function (d) {
+        if (d.vert) {
+          return taskArray.length * (conf.barHeight + conf.barGap) + conf.barHeight * 2;
+        }
+        return theBarHeight;
+      })
       .attr('transform-origin', function (d, i) {
         // Ignore the incoming i value and use our order instead
         i = d.order;
@@ -354,6 +367,9 @@ export const draw = function (text, id, version, diagObj) {
         if (d.milestone) {
           taskClass = ' milestone ' + taskClass;
         }
+        if (d.vert) {
+          taskClass = ' vert ' + taskClass;
+        }
 
         taskClass += secNum;
 
@@ -377,10 +393,13 @@ export const draw = function (text, id, version, diagObj) {
         let endX = timeScale(d.renderEndTime || d.endTime);
         if (d.milestone) {
           startX += 0.5 * (timeScale(d.endTime) - timeScale(d.startTime)) - 0.5 * theBarHeight;
-        }
-        if (d.milestone) {
           endX = startX + theBarHeight;
         }
+
+        if (d.vert) {
+          return timeScale(d.startTime) + theSidePad;
+        }
+
         const textWidth = this.getBBox().width;
 
         // Check id text width > width of rectangle
@@ -396,6 +415,9 @@ export const draw = function (text, id, version, diagObj) {
       })
       .attr('y', function (d, i) {
         // Ignore the incoming i value and use our order instead
+        if (d.vert) {
+          return conf.gridLineStartPadding + taskArray.length * (conf.barHeight + conf.barGap) + 60;
+        }
         i = d.order;
         return i * theGap + conf.barHeight / 2 + (conf.fontSize / 2 - 2) + theTopPad;
       })
@@ -406,6 +428,7 @@ export const draw = function (text, id, version, diagObj) {
         if (d.milestone) {
           endX = startX + theBarHeight;
         }
+
         const textWidth = this.getBBox().width;
 
         let classStr = '';
@@ -445,6 +468,10 @@ export const draw = function (text, id, version, diagObj) {
           taskType += ' milestoneText';
         }
 
+        if (d.vert) {
+          taskType += ' vertText';
+        }
+
         // Check id text width > width of rectangle
         if (textWidth > endX - startX) {
           if (endX + textWidth + 1.5 * conf.leftPadding > w) {
@@ -467,7 +494,7 @@ export const draw = function (text, id, version, diagObj) {
 
     const securityLevel = getConfig().securityLevel;
 
-    // Wrap the tasks in an a tag for working links without javascript
+    // Wrap the tasks in a tag for working links without javascript
     if (securityLevel === 'sandbox') {
       let sandboxElement;
       sandboxElement = select('#i' + id);
@@ -475,14 +502,14 @@ export const draw = function (text, id, version, diagObj) {
 
       rectangles
         .filter(function (d) {
-          return links[d.id] !== undefined;
+          return links.has(d.id);
         })
         .each(function (o) {
           var taskRect = doc.querySelector('#' + o.id);
           var taskText = doc.querySelector('#' + o.id + '-text');
           const oldParent = taskRect.parentNode;
           var Link = doc.createElement('a');
-          Link.setAttribute('xlink:href', links[o.id]);
+          Link.setAttribute('xlink:href', links.get(o.id));
           Link.setAttribute('target', '_top');
           oldParent.appendChild(Link);
           Link.appendChild(taskRect);
@@ -695,12 +722,12 @@ export const draw = function (text, id, version, diagObj) {
   function vertLabels(theGap, theTopPad) {
     let prevGap = 0;
 
-    const numOccurances = Object.keys(categoryHeights).map((d) => [d, categoryHeights[d]]);
+    const numOccurrences = Object.keys(categoryHeights).map((d) => [d, categoryHeights[d]]);
 
     svg
       .append('g') // without doing this, impossible to put grid lines behind text
       .selectAll('text')
-      .data(numOccurances)
+      .data(numOccurrences)
       .enter()
       .append(function (d) {
         const rows = d[0].split(common.lineBreakRegex);
@@ -725,7 +752,7 @@ export const draw = function (text, id, version, diagObj) {
       .attr('y', function (d, i) {
         if (i > 0) {
           for (let j = 0; j < i; j++) {
-            prevGap += numOccurances[i - 1][1];
+            prevGap += numOccurrences[i - 1][1];
             return (d[1] * theGap) / 2 + prevGap * theGap + theTopPad;
           }
         } else {

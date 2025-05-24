@@ -60,6 +60,8 @@ Function arguments are optional: 'call <callback_name>()' simply executes 'callb
 <string>["]                     this.popState();
 <string>[^"]*                   return "STR";
 <*>["]                          this.begin("string");
+"style"                         return 'STYLE';
+"classDef"                      return 'CLASSDEF';
 
 <INITIAL,namespace>"namespace"  { this.begin('namespace'); return 'NAMESPACE'; }
 <namespace>\s*(\r?\n)+          { this.popState(); return 'NEWLINE'; }
@@ -127,6 +129,10 @@ line was introduced with 'click'.
 <*>\-                           return 'MINUS';
 <*>"."                          return 'DOT';
 <*>\+                           return 'PLUS';
+":"                             return 'COLON';
+","                             return 'COMMA';
+\#                              return 'BRKT';
+"#"                             return 'BRKT';
 <*>\%                           return 'PCT';
 <*>"="                          return 'EQUALS';
 <*>\=                           return 'EQUALS';
@@ -198,6 +204,7 @@ line was introduced with 'click'.
 [\uFFD2-\uFFD7\uFFDA-\uFFDC]
                                 return 'UNICODE_TEXT';
 <*>\s                           return 'SPACE';
+\s                              return 'SPACE';
 <*><<EOF>>                      return 'EOF';
 
 /lex
@@ -235,11 +242,13 @@ classLabel
 
 namespaceName
     : alphaNumToken { $$=$1; }
+    | alphaNumToken DOT namespaceName { $$=$1+'.'+$3; }
     | alphaNumToken namespaceName { $$=$1+$2; }
     ;
 
 className
     : alphaNumToken { $$=$1; }
+    | alphaNumToken DOT className { $$=$1+'.'+$3; }
     | classLiteralName { $$=$1; }
     | alphaNumToken className { $$=$1+$2; }
     | alphaNumToken GENERICTYPE { $$=$1+'~'+$2+'~'; }
@@ -254,8 +263,10 @@ statement
     | memberStatement
     | annotationStatement
     | clickStatement
+    | styleStatement
     | cssClassStatement
     | noteStatement
+    | classDefStatement
     | direction
     | acc_title acc_title_value  { $$=$2.trim();yy.setAccTitle($$); }
     | acc_descr acc_descr_value  { $$=$2.trim();yy.setAccDescription($$); }
@@ -263,12 +274,12 @@ statement
     ;
 
 namespaceStatement
-    : namespaceIdentifier STRUCT_START classStatements STRUCT_STOP          {yy.addClassesToNamespace($1, $3);}
-    | namespaceIdentifier STRUCT_START NEWLINE classStatements STRUCT_STOP  {yy.addClassesToNamespace($1, $4);}
+    : namespaceIdentifier STRUCT_START classStatements STRUCT_STOP          { yy.addClassesToNamespace($1, $3); }
+    | namespaceIdentifier STRUCT_START NEWLINE classStatements STRUCT_STOP  { yy.addClassesToNamespace($1, $4); }
     ;
 
 namespaceIdentifier
-    : NAMESPACE namespaceName   {$$=$2; yy.addNamespace($2);}
+    : NAMESPACE namespaceName { $$=$2; yy.addNamespace($2); }
     ;
 
 classStatements
@@ -315,6 +326,15 @@ relationStatement
 noteStatement
     : NOTE_FOR className noteText  { yy.addNote($3, $2); }
     | NOTE noteText                { yy.addNote($2); }
+    ;
+
+classDefStatement
+    : CLASSDEF classList stylesOpt {$$ = $CLASSDEF;yy.defineClass($classList,$stylesOpt);}
+    ;
+
+classList
+    : ALPHA { $$ = [$ALPHA]; }
+    | classList COMMA ALPHA = { $$ = $classList.concat([$ALPHA]); }
     ;
 
 direction
@@ -365,9 +385,25 @@ clickStatement
     | CLICK className HREF STR STR LINK_TARGET          {$$ = $1;yy.setLink($2, $4, $6);yy.setTooltip($2, $5);}
     ;
 
-cssClassStatement
-    : CSSCLASS STR alphaNumToken  {yy.setCssClass($2, $3);}
+styleStatement
+    :STYLE ALPHA stylesOpt                              {$$ = $STYLE;yy.setCssStyle($2,$stylesOpt);}
     ;
+
+cssClassStatement
+    : CSSCLASS STR ALPHA                            {yy.setCssClass($2, $3);}
+    ;
+
+stylesOpt
+    : style {$$ = [$style]}
+    | stylesOpt COMMA style {$stylesOpt.push($style);$$ = $stylesOpt;}
+    ;
+
+style
+    : styleComponent
+    | style styleComponent  {$$ = $style + $styleComponent;}
+    ;
+
+styleComponent: ALPHA | NUM | COLON | UNIT | SPACE | BRKT | STYLE | PCT | LABEL;
 
 commentToken   : textToken | graphCodeTokens ;
 

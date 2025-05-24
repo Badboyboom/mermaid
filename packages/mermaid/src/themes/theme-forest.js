@@ -1,9 +1,9 @@
-import { darken, lighten, adjust, invert, isDark } from 'khroma';
-import { mkBorder } from './theme-helpers.js';
+import { adjust, darken, invert, isDark, lighten } from 'khroma';
 import {
   oldAttributeBackgroundColorEven,
   oldAttributeBackgroundColorOdd,
 } from './erDiagram-oldHardcodedValues.js';
+import { mkBorder } from './theme-helpers.js';
 
 class Theme {
   constructor() {
@@ -46,7 +46,7 @@ class Theme {
     this.actorBorder = 'calculated';
     this.actorBkg = 'calculated';
     this.actorTextColor = 'black';
-    this.actorLineColor = 'grey';
+    this.actorLineColor = 'calculated';
     this.signalColor = '#333';
     this.signalTextColor = '#333';
     this.labelBoxBkgColor = 'calculated';
@@ -81,10 +81,18 @@ class Theme {
     this.critBorderColor = '#ff8888';
     this.critBkgColor = 'red';
     this.todayLineColor = 'red';
+    this.vertLineColor = '#00BFFF';
 
     /* C4 Context Diagram variables */
     this.personBorder = this.primaryBorderColor;
     this.personBkg = this.mainBkg;
+
+    /* Architecture Diagram variables */
+    this.archEdgeColor = 'calculated';
+    this.archEdgeArrowColor = 'calculated';
+    this.archEdgeWidth = '3';
+    this.archGroupBorderColor = this.primaryBorderColor;
+    this.archGroupBorderWidth = '2px';
 
     /* state colors */
     this.labelColor = 'black';
@@ -101,6 +109,7 @@ class Theme {
     this.loopTextColor = this.actorTextColor;
     this.noteBorderColor = this.border2;
     this.noteTextColor = this.actorTextColor;
+    this.actorLineColor = this.actorBorder;
 
     /* Each color-set will have a background, a foreground and a border color */
     this.cScale0 = this.cScale0 || this.primaryColor;
@@ -160,6 +169,14 @@ class Theme {
     this.taskTextOutsideColor = this.taskTextDarkColor;
     this.activeTaskBorderColor = this.taskBorderColor;
     this.activeTaskBkgColor = this.mainBkg;
+
+    /* Architecture Diagram variables */
+    this.archEdgeColor = this.lineColor;
+    this.archEdgeArrowColor = this.lineColor;
+
+    /* ER diagram */
+    this.rowOdd = this.rowOdd || lighten(this.mainBkg, 75) || '#ffffff';
+    this.rowEven = this.rowEven || lighten(this.mainBkg, 20);
 
     /* state colors */
     this.transitionColor = this.transitionColor || this.lineColor;
@@ -239,6 +256,29 @@ class Theme {
     this.quadrantExternalBorderStrokeFill =
       this.quadrantExternalBorderStrokeFill || this.primaryBorderColor;
     this.quadrantTitleFill = this.quadrantTitleFill || this.primaryTextColor;
+
+    this.packet = {
+      startByteColor: this.primaryTextColor,
+      endByteColor: this.primaryTextColor,
+      labelColor: this.primaryTextColor,
+      titleColor: this.primaryTextColor,
+      blockStrokeColor: this.primaryTextColor,
+      blockFillColor: this.mainBkg,
+    };
+
+    /* radar */
+    this.radar = {
+      axisColor: this.radar?.axisColor || this.lineColor,
+      axisStrokeWidth: this.radar?.axisStrokeWidth || 2,
+      axisLabelFontSize: this.radar?.axisLabelFontSize || 12,
+      curveOpacity: this.radar?.curveOpacity || 0.5,
+      curveStrokeWidth: this.radar?.curveStrokeWidth || 2,
+      graticuleColor: this.radar?.graticuleColor || '#DEDEDE',
+      graticuleStrokeWidth: this.radar?.graticuleStrokeWidth || 1,
+      graticuleOpacity: this.radar?.graticuleOpacity || 0.3,
+      legendBoxSize: this.radar?.legendBoxSize || 12,
+      legendFontSize: this.radar?.legendFontSize || 12,
+    };
 
     /* xychart */
     this.xyChart = {

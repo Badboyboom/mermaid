@@ -96,7 +96,7 @@ sequenceDiagram
     participant Alice
     participant Bob
     Alice->>John: Hello John, how are you?
-    loop Healthcheck
+    loop HealthCheck
         John->>John: Fight against hypochondria
     end
     Note right of John: Rational thoughts<br/>prevail...
@@ -141,7 +141,7 @@ sequenceDiagram
 
 ## A commit flow diagram.
 
-```mermaid
+```mermaid-example
 gitGraph:
     commit "Ashish"
     branch newbranch
@@ -156,3 +156,5 @@ gitGraph:
     branch b2
     commit
 ```
+
+<!--- cspell:ignore Ashish newbranch --->

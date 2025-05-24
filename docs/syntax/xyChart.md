@@ -39,8 +39,10 @@ xychart-beta
 
 The chart can be drawn horizontal or vertical, default value is vertical.
 
-    xychart-beta horizontal
-    ...
+```
+xychart-beta horizontal
+...
+```
 
 ### Title
 
@@ -48,9 +50,11 @@ The title is a short description of the chart and it will always render on top o
 
 #### Example
 
-    xychart-beta
-        title "This is a simple example"
-        ...
+```
+xychart-beta
+    title "This is a simple example"
+    ...
+```
 
 > **Note**
 > If the title is a single word one no need to use `"`, but if it has space `"` is needed
@@ -61,8 +65,8 @@ The x-axis primarily serves as a categorical value, although it can also functio
 
 #### Example
 
-1.  `x-axis title min --> max` x-axis will function as numeric with the given range
-2.  `x-axis "title with space" [cat1, "cat2 with space", cat3]` x-axis if categorical, categories are text type
+1. `x-axis title min --> max` x-axis will function as numeric with the given range
+2. `x-axis "title with space" [cat1, "cat2 with space", cat3]` x-axis if categorical, categories are text type
 
 ### y-axis
 
@@ -70,8 +74,8 @@ The y-axis is employed to represent numerical range values, it cannot have categ
 
 #### Example
 
-1.  `y-axis title min --> max`
-2.  `y-axis title` it will only add the title, the range will be auto generated from data.
+1. `y-axis title min --> max`
+2. `y-axis title` it will only add the title, the range will be auto generated from data.
 
 > **Note**
 > Both x and y axis are optional if not provided we will try to create the range
@@ -82,7 +86,7 @@ A line chart offers the capability to graphically depict lines.
 
 #### Example
 
-1.  `line [2.3, 45, .98, -3.4]` it can have all valid numeric values.
+1. `line [2.3, 45, .98, -3.4]` it can have all valid numeric values.
 
 ### Bar chart
 
@@ -90,28 +94,31 @@ A bar chart offers the capability to graphically depict bars.
 
 #### Example
 
-1.  `bar [2.3, 45, .98, -3.4]` it can have all valid numeric values.
+1. `bar [2.3, 45, .98, -3.4]` it can have all valid numeric values.
 
 #### Simplest example
 
 The only two things required are the chart name (`xychart-beta`) and one data set. So you will be able to draw a chart with a simple config like
 
-    xychart-beta
-        line [+1.3, .6, 2.4, -.34]
+```
+xychart-beta
+    line [+1.3, .6, 2.4, -.34]
+```
 
 ## Chart Configurations
 
-| Parameter                | Description                                    | Default value |
-| ------------------------ | ---------------------------------------------- | :-----------: |
-| width                    | Width of the chart                             |      700      |
-| height                   | Height of the chart                            |      500      |
-| titlePadding             | Top and Bottom padding of the title            |      10       |
-| titleFontSize            | Title font size                                |      20       |
-| showTitle                | Title to be shown or not                       |     true      |
-| xAxis                    | xAxis configuration                            |  AxisConfig   |
-| yAxis                    | yAxis configuration                            |  AxisConfig   |
-| chartOrientation         | 'vertical' or 'horizontal'                     |  'vertical'   |
-| plotReservedSpacePercent | Minimum space plots will take inside the chart |      50       |
+| Parameter                | Description                                                   | Default value |
+| ------------------------ | ------------------------------------------------------------- | :-----------: |
+| width                    | Width of the chart                                            |      700      |
+| height                   | Height of the chart                                           |      500      |
+| titlePadding             | Top and Bottom padding of the title                           |      10       |
+| titleFontSize            | Title font size                                               |      20       |
+| showTitle                | Title to be shown or not                                      |     true      |
+| xAxis                    | xAxis configuration                                           |  AxisConfig   |
+| yAxis                    | yAxis configuration                                           |  AxisConfig   |
+| chartOrientation         | 'vertical' or 'horizontal'                                    |  'vertical'   |
+| plotReservedSpacePercent | Minimum space plots will take inside the chart                |      50       |
+| showDataLabel            | Should show the value corresponding to the bar within the bar |     false     |
 
 ### AxisConfig
 
@@ -131,19 +138,26 @@ The only two things required are the chart name (`xychart-beta`) and one data se
 
 ## Chart Theme Variables
 
-> **Note**
-> Themes for xychart resides inside xychart attribute so to set the variables use this syntax
-> %%{init: { "themeVariables": {"xyChart": {"titleColor": "#ff0000"} } }}%%
+Themes for xychart resides inside xychart attribute so to set the variables use this syntax:
+
+```yaml
+---
+config:
+  themeVariables:
+    xyChart:
+      titleColor: '#ff0000'
+---
+```
 
 | Parameter        | Description                                               |
 | ---------------- | --------------------------------------------------------- |
 | backgroundColor  | Background color of the whole chart                       |
 | titleColor       | Color of the Title text                                   |
-| xAxisLableColor  | Color of the x-axis labels                                |
+| xAxisLabelColor  | Color of the x-axis labels                                |
 | xAxisTitleColor  | Color of the x-axis title                                 |
 | xAxisTickColor   | Color of the x-axis tick                                  |
 | xAxisLineColor   | Color of the x-axis line                                  |
-| yAxisLableColor  | Color of the y-axis labels                                |
+| yAxisLabelColor  | Color of the y-axis labels                                |
 | yAxisTitleColor  | Color of the y-axis title                                 |
 | yAxisTickColor   | Color of the y-axis tick                                  |
 | yAxisLineColor   | Color of the y-axis line                                  |
@@ -157,6 +171,7 @@ config:
     xyChart:
         width: 900
         height: 600
+        showDataLabel: true
     themeVariables:
         xyChart:
             titleColor: "#ff0000"
@@ -175,6 +190,7 @@ config:
     xyChart:
         width: 900
         height: 600
+        showDataLabel: true
     themeVariables:
         xyChart:
             titleColor: "#ff0000"

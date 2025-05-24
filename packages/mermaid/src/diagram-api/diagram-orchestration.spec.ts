@@ -9,7 +9,7 @@ describe('diagram-orchestration', () => {
     expect(detectType('graph TD; A-->B')).toBe('flowchart');
   });
 
-  describe('proper diagram types should be detetced', () => {
+  describe('proper diagram types should be detected', () => {
     beforeAll(() => {
       addDiagrams();
     });
@@ -53,7 +53,7 @@ describe('diagram-orchestration', () => {
       expect(() =>
         detectType('flowchart TD; A-->B', { flowchart: { defaultRenderer: 'dagre-d3' } })
       ).toThrowErrorMatchingInlineSnapshot(
-        '"No diagram type detected matching given configuration for text: flowchart TD; A-->B"'
+        `[UnknownDiagramError: No diagram type detected matching given configuration for text: flowchart TD; A-->B]`
       );
 
       // graph & dagre-wrapper => flowchart-v2

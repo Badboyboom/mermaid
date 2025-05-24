@@ -16,7 +16,7 @@ It is a JavaScript based diagramming and charting tool that renders Markdown-ins
 [![Coverage Status](https://coveralls.io/repos/github/mermaid-js/mermaid/badge.svg?branch=master)](https://coveralls.io/github/mermaid-js/mermaid?branch=master)
 [![CDN Status](https://img.shields.io/jsdelivr/npm/hm/mermaid)](https://www.jsdelivr.com/package/npm/mermaid)
 [![NPM](https://img.shields.io/npm/dm/mermaid)](https://www.npmjs.com/package/mermaid)
-[![Join our Slack!](https://img.shields.io/static/v1?message=join%20chat&color=9cf&logo=slack&label=slack)](https://join.slack.com/t/mermaid-talk/shared_invite/enQtNzc4NDIyNzk4OTAyLWVhYjQxOTI2OTg4YmE1ZmJkY2Y4MTU3ODliYmIwOTY3NDJlYjA0YjIyZTdkMDMyZTUwOGI0NjEzYmEwODcwOTE)
+[![Join our Discord!](https://img.shields.io/static/v1?message=join%20chat&color=9cf&logo=discord&label=discord)](https://discord.gg/sKeNQX4Wtj)
 [![Twitter Follow](https://img.shields.io/twitter/follow/mermaidjs_?style=social)](https://twitter.com/mermaidjs_)
 
 </div>
@@ -36,19 +36,23 @@ But not having diagrams or docs ruins productivity and hurts organizational lear
 Mermaid addresses this problem by enabling users to create easily modifiable diagrams, it can also be made part of production scripts (and other pieces of code).<br/>
 <br/>
 Mermaid allows even non-programmers to easily create detailed and diagrams through the [Mermaid Live Editor](https://mermaid.live/).<br/>
-[Tutorials](../config/Tutorials.md) has video tutorials.
+[Tutorials](../ecosystem/tutorials.md) has video tutorials.
 
 Use Mermaid with your favorite applications, check out the list of [Community Integrations](../ecosystem/integrations-community.md).
 
 For a more detailed introduction to Mermaid and some of its more basic uses, look to the [Beginner's Guide](../intro/getting-started.md) and [Usage](../config/usage.md).
 
-🌐 [CDN](https://www.jsdelivr.com/package/npm/mermaid) | 📖 [Documentation](https://mermaidjs.github.io) | 🙌 [Contribution](../community/development.md) | 🔌 [Plug-Ins](../ecosystem/integrations-community.md)
+🌐 [CDN](https://www.jsdelivr.com/package/npm/mermaid) | 📖 [Documentation](https://mermaidjs.github.io) | 🙌 [Contribution](../community/contributing.md) | 🔌 [Plug-Ins](../ecosystem/integrations-community.md)
 
-> 🖖 Keep a steady pulse: mermaid needs more Collaborators, [Read More](https://github.com/knsv/mermaid/issues/866).
+> 🖖 Keep a steady pulse: [mermaid needs more Collaborators](https://github.com/mermaid-js/mermaid/issues/866).
 
 :trophy: **Mermaid was nominated and won the [JS Open Source Awards (2019)](https://osawards.com/javascript/#nominees) in the category "The most exciting use of technology"!!!**
 
 **Thanks to all involved, people committing pull requests, people answering questions and special thanks to Tyler Long who is helping me maintain the project 🙏**
+
+Our PR Visual Regression Testing is powered by [Argos](https://argos-ci.com/?utm_source=mermaid&utm_campaign=oss) with their generous Open Source plan. It makes the process of reviewing PRs with visual changes a breeze.
+
+[![Covered by Argos Visual Testing](https://argos-ci.com/badge-large.svg)](https://argos-ci.com?utm_source=mermaid&utm_campaign=oss)
 
 In our release process we rely heavily on visual regression tests using [applitools](https://applitools.com/). Applitools is a great service which has been easy to use and integrate with our tests.
 
@@ -105,6 +109,7 @@ To Deploy Mermaid:
 
 - [Mermaid Live Editor](https://github.com/mermaid-js/mermaid-live-editor)
 - [Mermaid CLI](https://github.com/mermaid-js/mermaid-cli)
+- [Mermaid Tiny](https://github.com/mermaid-js/mermaid/tree/develop/packages/tiny)
 - [Mermaid Webpack Demo](https://github.com/mermaidjs/mermaid-webpack-demo)
 - [Mermaid Parcel Demo](https://github.com/mermaidjs/mermaid-parcel-demo)
 
@@ -135,7 +140,7 @@ Don't hesitate to contact me if you want to get involved!
 
 Mermaid is a growing community and is always accepting new contributors. There's a lot of different ways to help out and we're always looking for extra hands! Look at [this issue](https://github.com/mermaid-js/mermaid/issues/866) if you want to know where to start helping out.
 
-Detailed information about how to contribute can be found in the [contribution guideline](/community/development).
+Detailed information about how to contribute can be found in the [contribution guideline](../community/contributing.md).
 
 ### Requirements
 
@@ -188,7 +193,7 @@ For public sites, it can be precarious to retrieve text from users on the intern
 
 As an extra level of security for sites with external users we are happy to introduce a new security level in which the diagram is rendered in a sandboxed iframe preventing JavaScript in the code from being executed. This is a great step forward for better security.
 
-_Unfortunately you can not have a cake and eat it at the same time which in this case means that some of the interactive functionality gets blocked along with the possible malicious code._
+_Unfortunately you cannot have a cake and eat it at the same time which in this case means that some of the interactive functionality gets blocked along with the possible malicious code._
 
 ## Reporting vulnerabilities
 
@@ -204,7 +209,7 @@ A quick note from Knut Sveidqvist:
 >
 > _Thank you to [Tyler Long](https://github.com/tylerlong) who has been a collaborator since April 2017._
 >
-> _Thank you to the ever-growing list of [contributors](https://github.com/knsv/mermaid/graphs/contributors) that brought the project this far!_
+> _Thank you to the ever-growing list of [contributors](https://github.com/mermaid-js/mermaid/graphs/contributors) that brought the project this far!_
 
 ---
 

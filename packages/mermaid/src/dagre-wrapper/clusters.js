@@ -7,7 +7,7 @@ import { getConfig } from '../diagram-api/diagramAPI.js';
 import { evaluate } from '../diagrams/common/common.js';
 import { getSubGraphTitleMargins } from '../utils/subGraphTitleMargins.js';
 
-const rect = (parent, node) => {
+const rect = async (parent, node) => {
   log.info('Creating subgraph rect for ', node.id, node);
   const siteConfig = getConfig();
 
@@ -30,8 +30,10 @@ const rect = (parent, node) => {
   //   .appendChild(createLabel(node.labelText, node.labelStyle, undefined, true));
   const text =
     node.labelType === 'markdown'
-      ? createText(label, node.labelText, { style: node.labelStyle, useHtmlLabels })
-      : label.node().appendChild(createLabel(node.labelText, node.labelStyle, undefined, true));
+      ? createText(label, node.labelText, { style: node.labelStyle, useHtmlLabels }, siteConfig)
+      : label
+          .node()
+          .appendChild(await createLabel(node.labelText, node.labelStyle, undefined, true));
 
   // Get the size of the label
   let bbox = text.getBBox();
@@ -69,13 +71,13 @@ const rect = (parent, node) => {
   if (useHtmlLabels) {
     label.attr(
       'transform',
-      // This puts the labal on top of the box instead of inside it
+      // This puts the label on top of the box instead of inside it
       `translate(${node.x - bbox.width / 2}, ${node.y - node.height / 2 + subGraphTitleTopMargin})`
     );
   } else {
     label.attr(
       'transform',
-      // This puts the labal on top of the box instead of inside it
+      // This puts the label on top of the box instead of inside it
       `translate(${node.x}, ${node.y - node.height / 2 + subGraphTitleTopMargin})`
     );
   }
@@ -129,7 +131,7 @@ const noteGroup = (parent, node) => {
 
   return shapeSvg;
 };
-const roundedWithTitle = (parent, node) => {
+const roundedWithTitle = async (parent, node) => {
   const siteConfig = getConfig();
 
   // Add outer g element
@@ -144,7 +146,7 @@ const roundedWithTitle = (parent, node) => {
 
   const text = label
     .node()
-    .appendChild(createLabel(node.labelText, node.labelStyle, undefined, true));
+    .appendChild(await createLabel(node.labelText, node.labelStyle, undefined, true));
 
   // Get the size of the label
   let bbox = text.getBBox();
@@ -184,15 +186,13 @@ const roundedWithTitle = (parent, node) => {
   // Center the label
   label.attr(
     'transform',
-    'translate(' +
-      (node.x - bbox.width / 2) +
-      ', ' +
-      (node.y -
-        node.height / 2 -
-        node.padding / 3 +
-        (evaluate(siteConfig.flowchart.htmlLabels) ? 5 : 3)) +
-      subGraphTitleTopMargin +
-      ')'
+    `translate(${node.x - bbox.width / 2}, ${
+      node.y -
+      node.height / 2 -
+      node.padding / 3 +
+      (evaluate(siteConfig.flowchart.htmlLabels) ? 5 : 3) +
+      subGraphTitleTopMargin
+    })`
   );
 
   const rectBox = rect.node().getBBox();
@@ -238,13 +238,13 @@ const shapes = { rect, roundedWithTitle, noteGroup, divider };
 
 let clusterElems = {};
 
-export const insertCluster = (elem, node) => {
+export const insertCluster = async (elem, node) => {
   log.trace('Inserting cluster');
   const shape = node.shape || 'rect';
-  clusterElems[node.id] = shapes[shape](elem, node);
+  clusterElems[node.id] = await shapes[shape](elem, node);
 };
-export const getClusterTitleWidth = (elem, node) => {
-  const label = createLabel(node.labelText, node.labelStyle, undefined, true);
+export const getClusterTitleWidth = async (elem, node) => {
+  const label = await createLabel(node.labelText, node.labelStyle, undefined, true);
   elem.node().appendChild(label);
   const width = label.getBBox().width;
   elem.node().removeChild(label);

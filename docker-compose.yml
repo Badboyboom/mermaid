@@ -1,23 +1,23 @@
-version: '3.9'
 services:
   mermaid:
-    image: node:18.19.0-alpine3.18
+    build:
+      context: .
+      dockerfile: Dockerfile
     stdin_open: true
     tty: true
     working_dir: /mermaid
-    mem_limit: '6G'
-    environment:
-      - NODE_OPTIONS=--max_old_space_size=6096
+    mem_limit: '8G'
     volumes:
       - ./:/mermaid
       - root_cache:/root/.cache
       - root_local:/root/.local
       - root_npm:/root/.npm
+      - /tmp:/tmp
     ports:
       - 9000:9000
       - 3333:3333
   cypress:
-    image: cypress/included:12.17.4
+    image: cypress/included:14.0.3
     stdin_open: true
     tty: true
     working_dir: /mermaid

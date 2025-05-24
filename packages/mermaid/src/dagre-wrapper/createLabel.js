@@ -3,6 +3,7 @@ import { log } from '../logger.js';
 import { getConfig } from '../diagram-api/diagramAPI.js';
 import { evaluate } from '../diagrams/common/common.js';
 import { decodeEntities } from '../utils.js';
+import { replaceIconSubstring } from '../rendering-util/createText.js';
 
 /**
  * @param dom
@@ -24,15 +25,10 @@ function addHtmlLabel(node) {
 
   const label = node.label;
   const labelClass = node.isNode ? 'nodeLabel' : 'edgeLabel';
-  div.html(
-    '<span class="' +
-      labelClass +
-      '" ' +
-      (node.labelStyle ? 'style="' + node.labelStyle + '"' : '') +
-      '>' +
-      label +
-      '</span>'
-  );
+  const span = div.append('span');
+  span.html(label);
+  applyStyle(span, node.labelStyle);
+  span.attr('class', labelClass);
 
   applyStyle(div, node.labelStyle);
   div.style('display', 'inline-block');
@@ -48,7 +44,7 @@ function addHtmlLabel(node) {
  * @param isNode
  * @deprecated svg-util/createText instead
  */
-const createLabel = (_vertexText, style, isTitle, isNode) => {
+const createLabel = async (_vertexText, style, isTitle, isNode) => {
   let vertexText = _vertexText || '';
   if (typeof vertexText === 'object') {
     vertexText = vertexText[0];
@@ -56,13 +52,11 @@ const createLabel = (_vertexText, style, isTitle, isNode) => {
   if (evaluate(getConfig().flowchart.htmlLabels)) {
     // TODO: addHtmlLabel accepts a labelStyle. Do we possibly have that?
     vertexText = vertexText.replace(/\\n|\n/g, '<br />');
-    log.info('vertexText' + vertexText);
+    log.debug('vertexText' + vertexText);
+    const label = await replaceIconSubstring(decodeEntities(vertexText));
     const node = {
       isNode,
-      label: decodeEntities(vertexText).replace(
-        /fa[blrs]?:fa-[\w-]+/g,
-        (s) => `<i class='${s.replace(':', ' ')}'></i>`
-      ),
+      label,
       labelStyle: style.replace('fill:', 'color:'),
     };
     let vertexNode = addHtmlLabel(node);
